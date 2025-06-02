@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Онлайн</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="game">
+        <h1>UNO Онлайн</h1>
+        <div id="lobby">
+            <input id="nicknameInput" placeholder="Введите ваш никнейм" maxlength="20">
+            <button onclick="createRoom()">Создать комнату</button>
+            <input id="roomIdInput" placeholder="Введите ID комнаты">
+            <button onclick="joinRoom()">Присоединиться</button>
+            <div id="roomId"></div>
+            <div id="players"></div>
+            <button id="readyButton" style="display: none;" onclick="playerReady()">Готов</button>
+        </div>
+        <div id="gameArea" style="display: none;">
+            <div class="deck">
+                <div id="draw-pile" class="card">UNO</div>
+                <div id="discard-pile" class="card"></div>
+            </div>
+            <div id="playersList"></div>
+            <div id="message"></div>
+            <div id="player-hand" class="player-hand"></div>
+            <div id="colorPicker" style="display: none;">
+                <button onclick="selectColor('red')">Красный</button>
+                <button onclick="selectColor('blue')">Синий</button>
+                <button onclick="selectColor('green')">Зеленый</button>
+                <button onclick="selectColor('yellow')">Желтый</button>
+            </div>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

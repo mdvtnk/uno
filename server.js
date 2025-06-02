@@ -101,7 +101,8 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('gameStarted', {
             players: room.players.map(p => ({ id: p.id, nickname: p.nickname, cardCount: p.hand.length })),
             currentCard: room.currentCard,
-            currentPlayer: room.players[room.currentPlayer].id
+            currentPlayer: room.players[room.currentPlayer].id,
+            nextPlayer: room.players[(room.currentPlayer + room.direction + room.players.length) % room.players.length].id
         });
         room.players.forEach(player => {
             io.to(player.id).emit('updateHand', player.hand);
@@ -118,7 +119,7 @@ io.on('connection', (socket) => {
         const player = room.players[room.currentPlayer];
         const cardIndex = player.hand.findIndex(c => c.color === card.color && c.value === card.value);
         if (cardIndex === -1 || !canPlayCard(card, room.currentCard)) {
-            socket.emit('error', 'Недопустимая карта!');
+            socket.emit('error', 'Недопустимаяreleased карта!');
             return;
         }
         player.hand.splice(cardIndex, 1);
@@ -152,7 +153,8 @@ io.on('connection', (socket) => {
         io.to(roomId).emit('gameState', {
             players: room.players.map(p => ({ id: p.id, nickname: p.nickname, cardCount: p.hand.length })),
             currentCard: room.currentCard,
-            currentPlayer: room.players[room.currentPlayer].id
+            currentPlayer: room.players[room.currentPlayer].id,
+            nextPlayer: room.players[(room.currentPlayer + room.direction + room.players.length) % room.players.length].id
         });
         room.players.forEach(player => {
             io.to(player.id).emit('updateHand', player.hand);
@@ -167,16 +169,28 @@ io.on('connection', (socket) => {
             return;
         }
         if (room.deck.length > 0) {
-            room.players[room.currentPlayer].hand.push(room.deck.pop());
-            room.currentPlayer = (room.currentPlayer + room.direction + room.players.length) % room.players.length;
+            const drawnCard = room.deck.pop();
+            room.players[room.currentPlayer].hand.push(drawnCard);
+            const canPlayDrawnCard = canPlayCard(drawnCard, room.currentCard);
             io.to(roomId).emit('gameState', {
                 players: room.players.map(p => ({ id: p.id, nickname: p.nickname, cardCount: p.hand.length })),
                 currentCard: room.currentCard,
-                currentPlayer: room.players[room.currentPlayer].id
+                currentPlayer: room.players[room.currentPlayer].id,
+                nextPlayer: room.players[(room.currentPlayer + room.direction + room.players.length) % room.players.length].id,
+                canPlayDrawnCard: canPlayDrawnCard
             });
             room.players.forEach(player => {
                 io.to(player.id).emit('updateHand', player.hand);
             });
+            if (!canPlayDrawnCard) {
+                room.currentPlayer = (room.currentPlayer + room.direction + room.players.length) % room.players.length;
+                io.to(roomId).emit('gameState', {
+                    players: room.players.map(p => ({ id: p.id, nickname: p.nickname, cardCount: p.hand.length })),
+                    currentCard: room.currentCard,
+                    currentPlayer: room.players[room.currentPlayer].id,
+                    nextPlayer: room.players[(room.currentPlayer + room.direction + room.players.length) % room.players.length].id
+                });
+            }
         } else {
             socket.emit('error', 'Колода пуста!');
         }
