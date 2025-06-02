@@ -1,0 +1,137 @@
+body {
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+}
+
+.game {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.deck {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.card {
+    width: 100px;
+    height: 140px;
+    border: 3px solid #fff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card.red { background: linear-gradient(45deg, #ff5555, #ff9999); }
+.card.blue { background: linear-gradient(45deg, #5555ff, #9999ff); }
+.card.green { background: linear-gradient(45deg, #55ff55, #99ff99); }
+.card.yellow { background: linear-gradient(45deg, #ffff55, #ffff99); }
+.card.wild { 
+    background: linear-gradient(45deg, #333, #666); 
+    color: #fff;
+    background-image: linear-gradient(45deg, #ff5555 25%, #5555ff 25%, #5555ff 50%, #55ff55 50%, #55ff55 75%, #ffff55 75%);
+}
+
+#draw-pile {
+    background: url('https://via.placeholder.com/100x140/333/fff?text=Колода') no-repeat center;
+    background-size: cover;
+}
+
+#discard-pile {
+    animation: cardDrop 0.5s ease-in-out;
+}
+
+.player-hand {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.player-hand .card {
+    animation: cardDraw 0.5s ease-in-out;
+}
+
+#lobby, #gameArea {
+    margin-top: 20px;
+}
+
+#playersList {
+    margin-bottom: 20px;
+    font-size: 1.2em;
+}
+
+button {
+    margin: 10px;
+    padding: 12px 24px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+    color: #fff;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff8e53, #ff6b6b);
+}
+
+input {
+    padding: 10px;
+    font-size: 1.1em;
+    margin: 10px;
+    border: 2px solid #fff;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+}
+
+#message {
+    font-size: 1.2em;
+    margin-top: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes cardDraw {
+    0% { transform: translateY(-100px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes cardDrop {
+    0% { transform: translateY(-50px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
