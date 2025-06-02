@@ -39,26 +39,16 @@ function playerReady() {
     socket.emit('playerReady', currentRoomId);
 }
 
-function startNewGame() {
-    socket.emit('startNewGame', currentRoomId);
-}
-
-function exitRoom() {
-    socket.emit('exitRoom', currentRoomId);
-}
-
 socket.on('roomCreated', (roomId) => {
     currentRoomId = roomId;
     document.getElementById('roomId').textContent = `ID комнаты: ${roomId}`;
     document.getElementById('readyButton').style.display = 'block';
-    showLobby();
 });
 
 socket.on('joinedRoom', (roomId) => {
     currentRoomId = roomId;
     document.getElementById('roomId').textContent = `ID комнаты: ${roomId}`;
     document.getElementById('readyButton').style.display = 'block';
-    showLobby();
 });
 
 socket.on('error', (message) => {
@@ -71,7 +61,8 @@ socket.on('updatePlayers', (players) => {
 });
 
 socket.on('gameStarted', ({ players, currentCard, currentPlayer, nextPlayer }) => {
-    showGameArea();
+    document.getElementById('lobby').style.display = 'none';
+    document.getElementById('gameArea').style.display = 'block';
     updateGameState({ players, currentCard, currentPlayer, nextPlayer });
 });
 
@@ -86,41 +77,7 @@ socket.on('updateHand', (hand) => {
 
 socket.on('gameOver', ({ winner }) => {
     document.getElementById('message').textContent = `Игра окончена! Победитель: ${winner}`;
-    document.getElementById('gameOverButtons').style.display = 'block'; // Показываем кнопки
 });
-
-socket.on('showGameOverOptions', () => {
-    document.getElementById('gameOverButtons').style.display = 'block'; // Показываем кнопки при окончании игры
-});
-
-socket.on('returnToLobby', () => {
-    showLobby();
-});
-
-socket.on('returnToMainMenu', () => {
-    currentRoomId = null;
-    currentHand = [];
-    document.getElementById('roomId').textContent = '';
-    document.getElementById('readyButton').style.display = 'none';
-    document.getElementById('players').innerHTML = '';
-    document.getElementById('message').textContent = '';
-    document.getElementById('lobby').style.display = 'block';
-    document.getElementById('gameArea').style.display = 'none';
-    document.getElementById('gameOverButtons').style.display = 'none';
-});
-
-function showLobby() {
-    document.getElementById('lobby').style.display = 'block';
-    document.getElementById('gameArea').style.display = 'none';
-    document.getElementById('gameOverButtons').style.display = 'none';
-    document.getElementById('message').textContent = '';
-}
-
-function showGameArea() {
-    document.getElementById('lobby').style.display = 'none';
-    document.getElementById('gameArea').style.display = 'block';
-    document.getElementById('gameOverButtons').style.display = 'none';
-}
 
 function updateGameState({ players, currentCard, currentPlayer, nextPlayer, canPlayDrawnCard }) {
     const playersListDiv = document.getElementById('playersList');
