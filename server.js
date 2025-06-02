@@ -63,7 +63,7 @@ io.on('connection', (socket) => {
 
     // Присоединение к комнате
     socket.on('joinRoom', ({ roomId, nickname }) => {
-        if (rooms[roomId] && rooms[roomId].players.length < 4 && !rooms[roomId].gameStarted) {
+        if (rooms[roomId] && rooms[roomId].players.length < 8 && !rooms[roomId].gameStarted) {
             rooms[roomId].players.push({ id: socket.id, nickname, hand: [], ready: false });
             socket.join(roomId);
             socket.emit('joinedRoom', roomId);
